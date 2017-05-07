@@ -25,7 +25,7 @@ export default {
    * Set the port in the production environment to 80                        *
    ***************************************************************************/
 
-  // port: 80,
+  port: process.env.PORT || 80
 
   /***************************************************************************
    * Set the log level in production environment to "silent"                 *
