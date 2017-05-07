@@ -1,0 +1,7 @@
+{
+  "generators": {
+    "modules": {
+        "ember-rest": "sails-ember-rest"
+    }
+  }
+}
