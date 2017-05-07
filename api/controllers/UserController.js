@@ -26,7 +26,7 @@ export default new controller({
                                 ],
                                 meta: {
                                     authenticated: true,
-                                    id: user.id
+                                    id: record.id
                                 }
                             });
                         });
