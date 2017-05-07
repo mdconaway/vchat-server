@@ -17,9 +17,9 @@ export default {
    * environment (see config/connections.js and config/models.js )           *
    ***************************************************************************/
 
-  // models: {
-  //   connection: 'someMysqlServer'
-  // },
+  models: {
+     connection: 'postgresqlServer'
+  },
 
   /***************************************************************************
    * Set the port in the production environment to 80                        *

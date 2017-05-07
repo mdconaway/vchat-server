@@ -17,8 +17,8 @@ export default {
    * environment (see config/connections.js and config/models.js )           *
    ***************************************************************************/
 
-  // models: {
-  //   connection: 'someMongodbServer'
-  // }
+  models: {
+     connection: 'localDiskDB'
+ }
 
 };
