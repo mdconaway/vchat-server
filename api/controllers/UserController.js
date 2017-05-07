@@ -12,8 +12,8 @@ export default new controller({
                 {
                     return res.negotiate(err);
                 }
-                User.verifyPassword(record, password).then((res) => {
-                    if(res)
+                User.verifyPassword(record, password).then((result) => {
+                    if(result)
                     {
                         Object.assign(req.session, {
                             authenticated: true,
