@@ -18,7 +18,13 @@ export default {
    ***************************************************************************/
 
   models: {
-     connection: 'localDiskDB'
- }
+     connection: 'postgresqlServer'
+  },
+
+  /***************************************************************************
+   * Set the port in the production environment to 80                        *
+   ***************************************************************************/
+
+  port: process.env.PORT || 80
 
 };
