@@ -22,7 +22,7 @@ export default new controller({
                         req.session.save(() => {
                             res.ok({
                                 users: [
-                                    user.toJSON()
+                                    record.toJSON()
                                 ],
                                 meta: {
                                     authenticated: true,
