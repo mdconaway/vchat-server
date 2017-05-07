@@ -5,6 +5,7 @@ export default new controller({
         const params = req.allParams();
         const username = params.username;
         const password = params.password;
+        const logout = params.logout;
         if(username && password)
         {
             User.findOne({username}).exec((err, record) => {
@@ -47,6 +48,15 @@ export default new controller({
                         });
                     }
                 });
+            });
+        }
+        else if(logout)
+        {
+            res.ok({
+                users: [],
+                meta: {
+                    authenticated: false
+                }
             });
         }
         else

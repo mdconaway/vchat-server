@@ -10,12 +10,11 @@
 
 import { util } from 'sails-ember-rest';
 
-export default function(req, res, next) {
+export default function(req, res, next){
     let pk = util.requirePk( req );
-    let data = util.parseValues( req, User );
     // User is allowed, proceed to the next policy, 
     // or if this is the last policy, the controller
-    if (req.session.authenticated && req.session.user.id === pk) 
+    if (req.session.authenticated && req.session.user.id == pk) 
     {
         return next();
     }

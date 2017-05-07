@@ -79,6 +79,7 @@ export default {
         }
         else 
         {
+            delete attrs.password;
             return cb();
         }
     }
