@@ -9,7 +9,7 @@
  * http://sailsjs.org/#!/documentation/reference/sails.config/sails.config.http.html
  */
 
-module.exports.http = {
+export const http = {
 
   /****************************************************************************
   *                                                                           *

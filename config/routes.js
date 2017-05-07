@@ -20,8 +20,7 @@
  * http://sailsjs.org/#!/documentation/concepts/Routes/RouteTargetSyntax.html
  */
 
-module.exports.routes = {
-
+export const routes = {
   /***************************************************************************
   *                                                                          *
   * Make the view located at `views/homepage.ejs` (or `views/homepage.jade`, *
@@ -32,10 +31,14 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  //'/': {
-  //  view: 'homepage'
-  //}
-
+  "POST /users/authenticate": {
+    controller: "UserController", 
+    action: "authenticate"
+  },
+  "GET /users/:id/hydrate": {
+    controller: "UserController", 
+    action: "hydrate"
+  }
   /***************************************************************************
   *                                                                          *
   * Custom routes here...                                                    *

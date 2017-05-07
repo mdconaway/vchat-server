@@ -12,7 +12,7 @@
  * http://sailsjs.org/#!/documentation/reference/sails.config/sails.config.session.html
  */
 
-module.exports.session = {
+export const session = {
 
   /***************************************************************************
   *                                                                          *
@@ -22,7 +22,7 @@ module.exports.session = {
   *                                                                          *
   ***************************************************************************/
   secret: '1a4f39c7c9bd7cfae447f13c6027e5fc',
-
+  key: 'vchat.sid'
 
   /***************************************************************************
   *                                                                          *
