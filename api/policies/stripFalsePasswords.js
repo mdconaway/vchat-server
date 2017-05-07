@@ -15,6 +15,9 @@ export default function(req, res, next){
     if(data && !data.password)
     {
         delete data.password;
+        req.body = {
+            user: data
+        };
     }
     next();
 };
