@@ -7,7 +7,9 @@
 
 export default {
     attributes: {
-
+        name: {
+            type: 'string'
+        }
     }
 };
 
