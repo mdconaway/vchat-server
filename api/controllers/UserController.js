@@ -27,7 +27,7 @@ export default new controller({
         if(username && (password || authKey))
         {
             User.findOne({username}).exec((err, record) => {
-                if(err)
+                if(err || !record)
                 {
                     return res.negotiate(err);
                 }
@@ -56,6 +56,10 @@ export default new controller({
                             }
                         },
                         (err, saves) => {
+                            if(err)
+                            {
+                                return invalidateSession(req, res);
+                            }
                             res.ok({
                                 users: [
                                     record.toJSON()
@@ -77,9 +81,15 @@ export default new controller({
         }
         else if(logout && req.session.authenticated)
         {
-            req.session.user.authToken = null;
-            req.session.user.save(() => {
-                invalidateSession(req, res);
+            User.findOne(req.session.user.id).exec((err, record) => {
+                if(err || !record)
+                {
+                    return invalidateSession(req, res);
+                }
+                record.authToken = null;
+                record.save(() => {
+                    invalidateSession(req, res);
+                });
             });
         }
         else
