@@ -56,6 +56,7 @@ export default new controller({
                             }
                         },
                         (err, saves) => {
+                            console.log(err);
                             if(err)
                             {
                                 return invalidateSession(req, res);
