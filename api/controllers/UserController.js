@@ -2,13 +2,13 @@ import { controller } from 'sails-ember-rest';
 import parallel from 'async/parallel';
 import { uid as token } from 'rand-token';
 
-function invalidateSession(req, res) {
+function invalidateSession(req, res, fn) {
     Object.assign(req.session, {
         authenticated: false,
         user: null
     });
     return req.session.save(() => {
-        res.forbidden({
+        res[fn]({
             users: [],
             meta: {
                 authenticated: false
@@ -58,7 +58,7 @@ export default new controller({
                         (err, saves) => {
                             if(err)
                             {
-                                return invalidateSession(req, res);
+                                return invalidateSession(req, res, 'forbidden');
                             }
                             res.ok({
                                 users: [
@@ -74,7 +74,7 @@ export default new controller({
                     }
                     else
                     {
-                        invalidateSession(req, res);
+                        invalidateSession(req, res, 'forbidden');
                     }
                 });
             });
@@ -84,11 +84,11 @@ export default new controller({
             User.findOne(req.session.user.id).exec((err, record) => {
                 if(err || !record)
                 {
-                    return invalidateSession(req, res);
+                    return invalidateSession(req, res,'forbidden');
                 }
                 record.authToken = null;
                 record.save(() => {
-                    invalidateSession(req, res);
+                    invalidateSession(req, res, 'ok');
                 });
             });
         }
