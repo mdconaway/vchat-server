@@ -1,5 +1,5 @@
 import { controller } from 'sails-ember-rest';
-import async from 'async';
+import parallel from 'async/parallel';
 import { uid as token } from 'rand-token';
 
 function invalidateSession(req, res) {
@@ -31,12 +31,12 @@ export default new controller({
                 {
                     return res.negotiate(err);
                 }
-                async.parallel({
+                parallel({
                     validPassword: (done) => {
-                        User.verifyPassword(record, password).then(done);
+                        User.verifyPassword(record, password, done);
                     },
                     validAuthKey: (done) => {
-                        done(record.authKey === authKey);
+                        done(null, record.authKey === authKey);
                     }
                 },
                 (result) =>{
@@ -47,7 +47,7 @@ export default new controller({
                             user: record
                         });
                         record.authToken = token(30);
-                        async.parallel({
+                        parallel({
                             session: (done) => {
                                 req.session.save(done);
                             },
