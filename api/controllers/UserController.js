@@ -39,8 +39,8 @@ export default new controller({
                         done(null, record.authKey === authKey);
                     }
                 },
-                (result) =>{
-                    if(result.validPassword || result.validAuthKey)
+                (err, result) =>{
+                    if(!err && (result.validPassword || result.validAuthKey))
                     {
                         Object.assign(req.session, {
                             authenticated: true,
@@ -55,7 +55,7 @@ export default new controller({
                                 record.save(done);
                             }
                         },
-                        (saves) => {
+                        (err, saves) => {
                             res.ok({
                                 users: [
                                     record.toJSON()
