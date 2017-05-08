@@ -54,10 +54,23 @@ export default {
     verifyPassword: function (record, password, cb) {
         return bcrypt.compare(password, record.password, cb); //this is also a promise
     },
-    changePassword: function(record, password, cb){
-        record.password = password;
-        record.save(function(err, u) {
-            return cb(err, u);
+    changePassword: function(record, oldpassword, newpassword, cb){
+        this.verifyPassword(record, oldpassword).then((result) => {
+            if(result)
+            {
+                bcrypt.hash(newpassword, SALT_WORK_FACTOR, function (err, hash) {
+                    if(err)
+                    {
+                        return cb(err);
+                    }
+                    record.password = hash;
+                    record.save(cb);
+                });
+            }
+            else
+            {
+                cb(new Error('Your old password is incorrect'));
+            }
         });
     },
     beforeCreate: function (attrs, cb) {
@@ -65,29 +78,5 @@ export default {
             attrs.password = hash;
             return cb(err);
         });
-    },
-    beforeUpdate: function (attrs, cb) {
-        if(attrs.password)
-        {
-            bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
-                if(err)
-                {
-                    return cb(err);
-                }
-                bcrypt.hash(attrs.password, salt, function(err, crypted) {
-                    if(err) 
-                    {
-                        return cb(err);
-                    }
-                    attrs.password = crypted;
-                    return cb();
-                });
-            });
-        }
-        else 
-        {
-            delete attrs.password;
-            return cb();
-        }
     }
 };
