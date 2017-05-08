@@ -39,8 +39,8 @@ export const policies = {
     find: ['sessionAuth'],
     findone: ['sessionAuth'],
     hydrate: ['sessionAuth'],
-    create: true,
-    update: ['sessionAuth', 'selfOnly', 'stripFalsePasswords'],
+    create: ['stripAuthToken'],
+    update: ['sessionAuth', 'selfOnly', 'stripFalsePasswords', 'stripAuthToken'],
     destroy: ['sessionAuth', 'selfOnly'],
     populate: ['sessionAuth'],
   }

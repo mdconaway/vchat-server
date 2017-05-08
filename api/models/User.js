@@ -10,6 +10,12 @@ const SALT_WORK_FACTOR = 10;
 
 export default {
     attributes: {
+        authToken: {
+            type: 'string',
+            required: false,
+            minLength: 30,
+            maxLength: 30
+        },
         name: {
             type: 'string',
             required: true,
@@ -41,6 +47,7 @@ export default {
         toJSON: function() {
             var obj = this.toObject();
             delete obj.password;
+            delete obj.authToken;
             return obj;
         }
     },

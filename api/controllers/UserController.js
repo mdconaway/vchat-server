@@ -1,62 +1,85 @@
 import { controller } from 'sails-ember-rest';
+import async from 'async';
+import { uid as token } from 'rand-token';
+
+function invalidateSession(req, res) {
+    Object.assign(req.session, {
+        authenticated: false,
+        user: null
+    });
+    return req.session.save(() => {
+        res.forbidden({
+            users: [],
+            meta: {
+                authenticated: false
+            }
+        });
+    });
+}
 
 export default new controller({
     authenticate(req, res){
         const params = req.allParams();
         const username = params.username;
         const password = params.password;
+        const authKey = params.authKey;
         const logout = params.logout;
-        if(username && password)
+        if(username && (password || authKey))
         {
             User.findOne({username}).exec((err, record) => {
                 if(err)
                 {
                     return res.negotiate(err);
                 }
-                User.verifyPassword(record, password).then((result) => {
-                    if(result)
+                async.parallel({
+                    validPassword: (done) => {
+                        User.verifyPassword(record, password).then(done);
+                    },
+                    validAuthKey: (done) => {
+                        done(record.authKey === authKey);
+                    }
+                },
+                (result) =>{
+                    if(result.validPassword || result.validAuthKey)
                     {
                         Object.assign(req.session, {
                             authenticated: true,
                             user: record
                         });
-                        req.session.save(() => {
+                        record.authToken = token(30);
+                        async.parallel({
+                            session: (done) => {
+                                req.session.save(done);
+                            },
+                            user: (done) => {
+                                record.save(done);
+                            }
+                        },
+                        (saves) => {
                             res.ok({
                                 users: [
                                     record.toJSON()
                                 ],
                                 meta: {
                                     authenticated: true,
-                                    id: record.id
+                                    id: record.id,
+                                    token: record.authToken
                                 }
                             });
                         });
                     }
                     else
                     {
-                        Object.assign(req.session, {
-                            authenticated: false,
-                            user: null
-                        });
-                        req.session.save(() => {
-                            res.forbidden({
-                                users: [],
-                                meta: {
-                                    authenticated: false
-                                }
-                            });
-                        });
+                        invalidateSession(req, res);
                     }
                 });
             });
         }
-        else if(logout)
+        else if(logout && req.session.authenticated)
         {
-            res.ok({
-                users: [],
-                meta: {
-                    authenticated: false
-                }
+            req.session.user.authToken = null;
+            req.session.user.save(() => {
+                invalidateSession(req, res);
             });
         }
         else
