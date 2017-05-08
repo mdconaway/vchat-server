@@ -27,7 +27,7 @@ export default new controller({
         if(username && (password || authKey))
         {
             User.findOne({username}).exec((err, record) => {
-                if(err || !record)
+                if(err)
                 {
                     return res.negotiate(err);
                 }
